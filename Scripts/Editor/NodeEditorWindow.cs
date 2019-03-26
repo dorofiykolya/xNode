@@ -42,6 +42,14 @@ namespace XNodeEditor {
                 _rects[index] = portConnectionPoint.Value;
                 index++;
             }
+
+            if (!NodeEditorPreferences.GetSettings().autoSave)
+            {
+                if (EditorUtility.DisplayDialog("Save?", "Save asset?", "Save"))
+                {
+                  AssetDatabase.SaveAssets();
+                }
+            }
         }
 
         private void OnEnable() {
@@ -53,6 +61,15 @@ namespace XNodeEditor {
                     if (nodePort != null)
                         _portConnectionPoints.Add(nodePort, _rects[i]);
                 }
+            }
+        }
+
+        private void OnOpened()
+        {
+            if(graph != null)
+            {
+                var editor = NodeGraphEditor.GetEditor(graph);
+                editor.OnOpened(this);
             }
         }
 
@@ -147,12 +164,18 @@ namespace XNodeEditor {
         public static bool OnOpen(int instanceID, int line) {
             XNode.NodeGraph nodeGraph = EditorUtility.InstanceIDToObject(instanceID) as XNode.NodeGraph;
             if (nodeGraph != null) {
-                NodeEditorWindow w = GetWindow(typeof(NodeEditorWindow), false, "xNode", true) as NodeEditorWindow;
-                w.wantsMouseMove = true;
-                w.graph = nodeGraph;
+            Open(nodeGraph);
                 return true;
             }
             return false;
+        }
+
+        public static void Open(XNode.NodeGraph graph)
+        {
+            NodeEditorWindow w = GetWindow(typeof(NodeEditorWindow), false, "xNode", true) as NodeEditorWindow;
+            w.wantsMouseMove = true;
+            w.graph = graph;
+            w.OnOpened();
         }
 
         /// <summary> Repaint all open NodeEditorWindows. </summary>

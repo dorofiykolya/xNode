@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
+using XNode;
 
 namespace XNodeEditor {
     public partial class NodeEditorWindow {
@@ -454,7 +455,7 @@ namespace XNodeEditor {
                     rect.position = new Vector2(rect.position.x - 8, rect.position.y - 8);
                     rect = GridToWindowRect(rect);
 
-                    NodeEditorGUILayout.DrawPortHandle(rect, bgcol, frcol);
+                    NodeEditorGUILayout.DrawPortHandle(rect, bgcol, frcol, Node.PortStyle.Default);
                 }
             }
         }

@@ -28,6 +28,15 @@ namespace XNodeEditor {
             return new NodeEditorPreferences.Settings();
         }
 
+        public virtual bool IsExcludeContextMenuNode(Type type)
+        {
+          //Check if type has the CreateNodeMenuAttribute
+             XNode.Node.CreateNodeMenuAttribute attrib;
+             if (NodeEditorUtilities.GetAttrib(type, out attrib)) // Return custom path
+                 return attrib.exclude;
+             return false;
+        }
+
         /// <summary> Returns context node menu path. Null or empty strings for hidden nodes. </summary>
         public virtual string GetNodeMenuName(Type type) {
             //Check if type has the CreateNodeMenuAttribute
@@ -46,7 +55,7 @@ namespace XNodeEditor {
 
                 //Get node context menu path
                 string path = GetNodeMenuName(type);
-                if (string.IsNullOrEmpty(path)) continue;
+                if (string.IsNullOrEmpty(path) || IsExcludeContextMenuNode(type)) continue;
 
                 menu.AddItem(new GUIContent(path), false, () => {
                     CreateNode(type, pos);
@@ -54,6 +63,10 @@ namespace XNodeEditor {
             }
             menu.AddSeparator("");
             menu.AddItem(new GUIContent("Preferences"), false, () => NodeEditorWindow.OpenPreferences());
+            if (!NodeEditorPreferences.GetSettings().autoSave)
+            {
+                menu.AddItem(new GUIContent("Save"), false, () => AssetDatabase.SaveAssets());
+            }
             NodeEditorWindow.AddCustomContextMenuItems(menu, target);
         }
 
@@ -80,11 +93,19 @@ namespace XNodeEditor {
             return node;
         }
 
+        public virtual void OnOpened(NodeEditorWindow window)
+        {
+            
+        }
+
         /// <summary> Safely remove a node and all its connections. </summary>
         public void RemoveNode(XNode.Node node) {
-            UnityEngine.Object.DestroyImmediate(node, true);
-            target.RemoveNode(node);
-            if (NodeEditorPreferences.GetSettings().autoSave) AssetDatabase.SaveAssets();
+            if (target.CanRemove(node))
+            {
+                UnityEngine.Object.DestroyImmediate(node, true);
+                target.RemoveNode(node);
+                if (NodeEditorPreferences.GetSettings().autoSave) AssetDatabase.SaveAssets();
+            }
         }
 
         [AttributeUsage(AttributeTargets.Class)]

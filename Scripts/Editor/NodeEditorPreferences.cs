@@ -28,6 +28,7 @@ namespace XNodeEditor {
             public bool gridSnap = true;
             public bool autoSave = true;
             public bool zoomToMouse = true;
+            public bool showResult = false;
             [SerializeField] private string typeColorsData = "";
             [NonSerialized] public Dictionary<string, Color> typeColors = new Dictionary<string, Color>();
             public NoodleType noodleType = NoodleType.Curve;
@@ -129,6 +130,7 @@ namespace XNodeEditor {
             //Label
             EditorGUILayout.LabelField("System", EditorStyles.boldLabel);
             settings.autoSave = EditorGUILayout.Toggle(new GUIContent("Autosave", "Disable for better editor performance"), settings.autoSave);
+            settings.showResult = EditorGUILayout.Toggle(new GUIContent("ToolTipResult", "Show Tooltip result"), settings.showResult);
             if (GUI.changed) SavePrefs(key, settings);
             EditorGUILayout.Space();
         }

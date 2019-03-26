@@ -6,6 +6,7 @@ using System.Reflection;
 using UnityEditor;
 using UnityEditorInternal;
 using UnityEngine;
+using XNode;
 
 namespace XNodeEditor {
     /// <summary> xNode-specific version of <see cref="EditorGUILayout"/> </summary>
@@ -143,7 +144,14 @@ namespace XNodeEditor {
                 Color tint;
                 if (NodeEditorWindow.nodeTint.TryGetValue(port.node.GetType(), out tint)) backgroundColor *= tint;
                 Color col = NodeEditorWindow.current.graphEditor.GetTypeColor(port.ValueType);
-                DrawPortHandle(rect, backgroundColor, col);
+
+
+                Node.InputAttribute inputAttr;
+                NodeEditorUtilities.GetCachedAttrib(port.node.GetType(), property.name, out inputAttr);
+                Node.OutputAttribute outAttr;
+                NodeEditorUtilities.GetCachedAttrib(port.node.GetType(), property.name, out outAttr);
+
+                DrawPortHandle(rect, backgroundColor, col, inputAttr != null? inputAttr.style : outAttr != null? outAttr.style : Node.PortStyle.Default);
 
                 // Register the handle position
                 Vector2 portPos = rect.center;
@@ -200,7 +208,7 @@ namespace XNodeEditor {
             Color tint;
             if (NodeEditorWindow.nodeTint.TryGetValue(port.node.GetType(), out tint)) backgroundColor *= tint;
             Color col = NodeEditorWindow.current.graphEditor.GetTypeColor(port.ValueType);
-            DrawPortHandle(rect, backgroundColor, col);
+            DrawPortHandle(rect, backgroundColor, col, Node.PortStyle.Default);
 
             // Register the handle position
             Vector2 portPos = rect.center;
@@ -229,7 +237,7 @@ namespace XNodeEditor {
             Color tint;
             if (NodeEditorWindow.nodeTint.TryGetValue(port.node.GetType(), out tint)) backgroundColor *= tint;
             Color col = NodeEditorWindow.current.graphEditor.GetTypeColor(port.ValueType);
-            DrawPortHandle(rect, backgroundColor, col);
+            DrawPortHandle(rect, backgroundColor, col, Node.PortStyle.Default);
 
             // Register the handle position
             Vector2 portPos = rect.center;
@@ -245,12 +253,12 @@ namespace XNodeEditor {
             GUILayout.EndHorizontal();
         }
 
-        public static void DrawPortHandle(Rect rect, Color backgroundColor, Color typeColor) {
+        public static void DrawPortHandle(Rect rect, Color backgroundColor, Color typeColor, Node.PortStyle style) {
             Color col = GUI.color;
             GUI.color = backgroundColor;
-            GUI.DrawTexture(rect, NodeEditorResources.dotOuter);
+            GUI.DrawTexture(rect, style == Node.PortStyle.Default? NodeEditorResources.dotOuter : NodeEditorResources.arrowOuter);
             GUI.color = typeColor;
-            GUI.DrawTexture(rect, NodeEditorResources.dot);
+            GUI.DrawTexture(rect, style == Node.PortStyle.Default? NodeEditorResources.dot : NodeEditorResources.arrow);
             GUI.color = col;
         }
 

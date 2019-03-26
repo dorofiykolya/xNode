@@ -35,6 +35,11 @@ namespace XNode {
             return node;
         }
 
+        public virtual bool CanRemove(Node node)
+        {
+            return true;
+        }
+
         /// <summary> Safely remove a node and all its connections </summary>
         /// <param name="node"> The node to remove </param>
         public void RemoveNode(Node node) {
@@ -75,6 +80,11 @@ namespace XNode {
             }
 
             return graph;
+        }
+
+        public virtual bool MatchNode(Type type)
+        {
+            return true;
         }
 
         private void OnDestroy() {

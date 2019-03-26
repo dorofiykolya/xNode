@@ -34,7 +34,7 @@ namespace XNodeEditor {
             while (iterator.NextVisible(enterChildren)) {
                 enterChildren = false;
                 if (excludes.Contains(iterator.name)) continue;
-                NodeEditorGUILayout.PropertyField(iterator, true);
+                PropertyField(iterator, true);
             }
 
             // Iterate through instance ports and draw them in the order in which they are serialized
@@ -44,6 +44,11 @@ namespace XNodeEditor {
             }
 
             serializedObject.ApplyModifiedProperties();
+        }
+
+        protected virtual void PropertyField(SerializedProperty property, bool includeChildren = true, params GUILayoutOption[] options)
+        {
+            NodeEditorGUILayout.PropertyField(property, includeChildren, options);
         }
 
         public virtual int GetWidth() {

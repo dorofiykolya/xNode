@@ -8,6 +8,10 @@ namespace XNodeEditor {
         private static Texture2D _dot;
         public static Texture2D dotOuter { get { return _dotOuter != null ? _dotOuter : _dotOuter = Resources.Load<Texture2D>("xnode_dot_outer"); } }
         private static Texture2D _dotOuter;
+        public static Texture2D arrow { get { return _arrow != null ? _arrow : _arrow = Resources.Load<Texture2D>("xnode_arrow"); } }
+        private static Texture2D _arrow;
+        public static Texture2D arrowOuter { get { return _arrowOuter != null ? _arrowOuter : _arrowOuter = Resources.Load<Texture2D>("xnode_arrow_outer"); } }
+        private static Texture2D _arrowOuter;
         public static Texture2D nodeBody { get { return _nodeBody != null ? _nodeBody : _nodeBody = Resources.Load<Texture2D>("xnode_node"); } }
         private static Texture2D _nodeBody;
         public static Texture2D nodeHighlight { get { return _nodeHighlight != null ? _nodeHighlight : _nodeHighlight = Resources.Load<Texture2D>("xnode_node_highlight"); } }

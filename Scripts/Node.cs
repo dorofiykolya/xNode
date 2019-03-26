@@ -217,6 +217,12 @@ namespace XNode {
             foreach (NodePort port in Ports) port.ClearConnections();
         }
 
+        public enum PortStyle
+        {
+            Default,
+            Arrow
+        }
+
 #region Attributes
         /// <summary> Mark a serializable field as an input port. You can access this through <see cref="GetInputPort(string)"/> </summary>
         [AttributeUsage(AttributeTargets.Field, AllowMultiple = true)]
@@ -225,6 +231,7 @@ namespace XNode {
             public ConnectionType connectionType;
             public bool instancePortList;
             public TypeConstraint typeConstraint;
+            public PortStyle style;
 
             /// <summary> Mark a serializable field as an input port. You can access this through <see cref="GetInputPort(string)"/> </summary>
             /// <param name="backingValue">Should we display the backing value for this port as an editor field? </param>
@@ -245,6 +252,7 @@ namespace XNode {
             public ShowBackingValue backingValue;
             public ConnectionType connectionType;
             public bool instancePortList;
+            public PortStyle style;
 
             /// <summary> Mark a serializable field as an output port. You can access this through <see cref="GetOutputPort(string)"/> </summary>
             /// <param name="backingValue">Should we display the backing value for this port as an editor field? </param>
@@ -260,7 +268,9 @@ namespace XNode {
         [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
         public class CreateNodeMenuAttribute : Attribute {
             public string menuName;
-            /// <summary> Manually supply node class with a context menu path </summary>
+            public bool exclude;
+
+          /// <summary> Manually supply node class with a context menu path </summary>
             /// <param name="menuName"> Path to this node in the context menu. Null or empty hides it. </param>
             public CreateNodeMenuAttribute(string menuName) {
                 this.menuName = menuName;
